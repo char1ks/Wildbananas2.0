@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конкретный товар</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .product-details {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1 id="product-name">Название товара</h1>
+<div class="product-details" id="product-details"></div>
+<a href="/product/main">Назад к списку товаров</a>
+
+<script>
+    const productId = new URLSearchParams(window.location.search).get('id');
+
+    async function getConcreteProduct(id) {
+        const response = await fetch(`/product/api/concrete/${id}`);
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error('Ошибка при получении товара');
+    }
+
+    async function loadProduct() {
+        try {
+            const product = await getConcreteProduct(productId);
+            document.getElementById('product-name').innerText = product.name;
+            document.getElementById('product-details').innerHTML = `
+                <p>Описание: ${product.description}</p>
+                <p>Цена: ${product.price} руб.</p>
+                <p>Количество: ${product.quantity}</p>
+                <p>Категория: ${product.category}</p>
+            `;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    window.onload = loadProduct;
+</script>
+
+</body>
+</html>

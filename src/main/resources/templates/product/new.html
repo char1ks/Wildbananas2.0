@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить новый товар</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Добавить новый товар</h1>
+<form id="product-form">
+    <div class="form-group">
+        <label for="name">Название:</label>
+        <input type="text" id="name" required>
+    </div>
+    <div class="form-group">
+        <label for="description">Описание:</label>
+        <textarea id="description" required></textarea>
+    </div>
+    <div class="form-group">
+        <label for="price">Цена:</label>
+        <input type="number" id="price" required>
+    </div>
+    <div class="form-group">
+        <label for="quantity">Количество:</label>
+        <input type="number" id="quantity" required>
+    </div>
+    <div class="form-group">
+        <label for="category">Категория:</label>
+        <input type="text" id="category" required>
+    </div>
+    <button type="submit">Добавить товар</button>
+</form>
+<a href="/product/main">Назад к списку товаров</a>
+
+<script>
+    document.getElementById('product-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const product = {
+            name: document.getElementById('name').value,
+            description: document.getElementById('description').value,
+            price: parseFloat(document.getElementById('price').value),
+            quantity: parseInt(document.getElementById('quantity').value),
+            category: document.getElementById('category').value
+        };
+
+        try {
+            const response = await fetch('/product/api/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(product)
+            });
+
+            if (response.ok) {
+                alert('Товар добавлен успешно!');
+                window.location.href = '/product/main'; // Перенаправление на главную страницу
+            } else {
+                alert('Ошибка при добавлении товара');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    });
+</script>
+
+</body>
+</html>
